@@ -30,7 +30,7 @@ const mapDispatch = modelNames => (state) => {
  */
 function inject(...modelNames) {
   if (typeof modelNames[0] === 'function') {
-    return component => connect(modelNames[0], modelNames[1])(component);
+    return component => connect(...modelNames)(component);
   }
   return component => connect(mapState(modelNames), mapDispatch(modelNames))(component);
 }
