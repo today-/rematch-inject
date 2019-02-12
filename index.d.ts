@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Connect } from 'react-redux';
 
 export type IReactComponent<P = any> =
     | React.StatelessComponent<P>
@@ -18,12 +19,22 @@ export type IStoresToProps<
     C extends IValueMap = {}
     > = (stores: S, nextProps: P, context: C) => I
 
-export function inject(
-    ...stores: string[]
-): <T extends IReactComponent<any>>(
-    target: T
-) => T & (T extends IReactComponent<infer P> ? IWrappedComponent<P> : never)
+export interface Inject extends Connect {
+    (
+        ...stores: string[]
+    ): <T extends IReactComponent<any>>(
+        target: T
+    ) => T & (T extends IReactComponent<infer P> ? IWrappedComponent<P> : never);
 
-export function inject<S, P, I, C>(
-    fn: IStoresToProps<S, P, I, C>
-): <T extends IReactComponent>(target: T) => T & IWrappedComponent<P>
+    <RootState>(
+        ...stores: (keyof RootState)[]
+    ): <T extends IReactComponent<any>>(
+        target: T
+    ) => T & (T extends IReactComponent<infer P> ? IWrappedComponent<P> : never);
+
+    <S, P, I, C>(
+        fn: IStoresToProps<S, P, I, C>
+    ): <T extends IReactComponent>(target: T) => T & IWrappedComponent<P>;
+}
+
+export const inject: Inject;
