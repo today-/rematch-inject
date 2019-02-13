@@ -38,3 +38,14 @@ export interface Inject extends Connect {
 }
 
 export const inject: Inject;
+
+interface IModel {
+    name: string;
+    state: any;
+}
+
+type Without<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+export type Injected<Store extends IModel> = Partial<{
+    [k in Store['name']]: Store['state'];
+} & Without<Store, keyof IModel>>;
