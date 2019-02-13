@@ -1,6 +1,6 @@
 {
   "name": "rematch-inject",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Injecting rematch models to React components in MobX-like way",
   "main": "lib/index.js",
   "files": [
