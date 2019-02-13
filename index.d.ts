@@ -46,6 +46,11 @@ interface IModel {
 
 type Without<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export type Injected<Store extends IModel> = Partial<{
+export type InjectedSelector<Selector extends (a: any) => any> = Partial<ReturnType<Selector>>
+
+export type InjectedStore<Store extends IModel> = Partial<{
     [k in Store['name']]: Store['state'];
-} & Without<Store, keyof IModel>>;
+} & Without<Store, keyof IModel>>
+
+export type Injected<S> = S extends IModel ? InjectedStore<S> : S extends (a: any) => any ? InjectedSelector<S> : {};
+
