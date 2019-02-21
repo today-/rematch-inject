@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Connect } from 'react-redux';
+import { Connect, DispatchProp } from 'react-redux';
 
 export type IReactComponent<P = any> =
     | React.StatelessComponent<P>
@@ -46,11 +46,11 @@ interface IModel {
 
 type Without<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-export type InjectedSelector<Selector extends (a: any) => any> = Partial<ReturnType<Selector>>
+export type InjectedSelector<Selector extends (a: any) => any> = Partial<ReturnType<Selector> & DispatchProp>
 
 export type InjectedStore<Store extends IModel> = Partial<{
     [k in Store['name']]: Store['state'];
-} & Without<Store, keyof IModel>>
+} & Without<Store, keyof IModel> & DispatchProp>;
 
 export type Injected<S> = S extends IModel ? InjectedStore<S> : S extends (a: any) => any ? InjectedSelector<S> : {};
 
