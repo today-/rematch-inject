@@ -4,37 +4,30 @@ import { Connect, DispatchProp } from 'react-redux';
 export type IReactComponent<P = any> =
     | React.StatelessComponent<P>
     | React.ComponentClass<P>
-    | React.ClassicComponentClass<P>
+    | React.ClassicComponentClass<P>;
 
-export type IWrappedComponent<P> = {
-    wrappedComponent: IReactComponent<P>
-    wrappedInstance: React.ReactInstance | undefined
-}
-
-export type IValueMap = { [key: string]: any }
+export type IValueMap = { [key: string]: any };
 export type IStoresToProps<
     S extends IValueMap = {},
     P extends IValueMap = {},
     I extends IValueMap = {},
     C extends IValueMap = {}
-    > = (stores: S, nextProps: P, context: C) => I
+    > = (stores: S, nextProps: P, context: C) => I;
+
+type ComponentInjector = <T extends IReactComponent>(target: T) => T;
 
 export interface Inject extends Connect {
     (
         ...stores: string[]
-    ): <T extends IReactComponent<any>>(
-        target: T
-    ) => T & (T extends IReactComponent<infer P> ? IWrappedComponent<P> : never);
+    ): ComponentInjector;
 
     <RootState>(
         ...stores: (keyof RootState)[]
-    ): <T extends IReactComponent<any>>(
-        target: T
-    ) => T & (T extends IReactComponent<infer P> ? IWrappedComponent<P> : never);
+    ): ComponentInjector;
 
     <S, P, I, C>(
         fn: IStoresToProps<S, P, I, C>
-    ): <T extends IReactComponent>(target: T) => T & IWrappedComponent<P>;
+    ): ComponentInjector;
 }
 
 export const inject: Inject;
